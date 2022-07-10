@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: .
+      target: exec
+    image: linksy:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    pid: host
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: linksy
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/db.sql:/docker-entrypoint-initdb.d/db.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d linksy" ]
+      interval: 1s
+      timeout: 5s
+      retries: 5
