@@ -1,0 +1,79 @@
+openapi: 3.0.3
+info:
+  title: Linksy
+  description: "URL Shortener"
+  version: 1.0.0
+servers:
+  - url: /api
+
+paths:
+  /shorten:
+    post:
+      tags:
+        - Shortener
+      summary: Shorten given URL to an ID
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShortenRequest"
+        required: true
+      responses:
+        "500":
+          description: Internal error
+          content: {}
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShortenResponse"
+
+  /retrieve:
+    get:
+      tags:
+        - Shortener
+      summary: Get original URL by ID
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "500":
+          description: Internal error
+          content: {}
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RetrieveResponse"
+
+components:
+  parameters:
+    idParam:
+      in: query
+      name: id
+      required: true
+      schema:
+        type: string
+
+  schemas:
+    ShortenRequest:
+      $ref: "#/components/schemas/URL"
+
+    ShortenResponse:
+      type: object
+      properties:
+        id:
+          type: string
+
+    RetrieveResponse:
+      $ref: "#/components/schemas/URL"
+
+    URL:
+      type: object
+      properties:
+        url:
+          type: string
+          example: google.com
