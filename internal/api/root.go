@@ -5,11 +5,12 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v2"
-	"github.com/senago/linksy/internal/customtypes"
+	"github.com/senago/linksy/internal/api/controller"
+	"github.com/senago/linksy/internal/customtype"
 )
 
 type APIService struct {
-	log    *customtypes.Logger
+	log    *customtype.Logger
 	router *fiber.App
 }
 
@@ -21,7 +22,7 @@ func (svc *APIService) Shutdown(ctx context.Context) error {
 	return svc.router.Shutdown()
 }
 
-func NewAPIService(log *customtypes.Logger, dbConn *customtypes.DBConn) (*APIService, error) {
+func NewAPIService(log *customtype.Logger, dbConn *customtype.DBConn) (*APIService, error) {
 	svc := &APIService{
 		log: log,
 		router: fiber.New(fiber.Config{
@@ -29,6 +30,16 @@ func NewAPIService(log *customtypes.Logger, dbConn *customtypes.DBConn) (*APISer
 			JSONDecoder: sonic.Unmarshal,
 		}),
 	}
+
+	registry, err := controller.NewRegistry(log, dbConn)
+	if err != nil {
+		return nil, err
+	}
+
+	api := svc.router.Group("/api")
+
+	api.Post("/shorten", registry.ShortenerController.Shorten)
+	api.Get("/retrieve", registry.ShortenerController.Retrieve)
 
 	return svc, nil
 }

@@ -1,4 +1,4 @@
-package customtypes
+package customtype
 
 import (
 	"github.com/jackc/pgx/v5/pgxpool"
