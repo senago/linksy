@@ -5,11 +5,11 @@ type ShortenRequest struct {
 }
 
 type ShortenResponse struct {
-	ID string `json:"id"`
+	Hash string `json:"hash"`
 }
 
 type RetrieveRequest struct {
-	ID string `query:"id"`
+	Hash string `query:"hash"`
 }
 
 type RetrieveResponse struct {

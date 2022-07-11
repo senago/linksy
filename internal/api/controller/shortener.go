@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"context"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/senago/linksy/internal/customtype"
 	"github.com/senago/linksy/internal/model/dto"
@@ -8,8 +10,8 @@ import (
 )
 
 type ShortenerController struct {
-	log      *customtype.Logger
-	registry *service.Registry
+	log *customtype.Logger
+	svc *service.Registry
 }
 
 func (c *ShortenerController) Shorten(ctx *fiber.Ctx) error {
@@ -18,7 +20,12 @@ func (c *ShortenerController) Shorten(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.JSON(nil)
+	response, err := c.svc.ShortenerService.Shorten(context.Background(), request)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(response)
 }
 
 func (c *ShortenerController) Retrieve(ctx *fiber.Ctx) error {
@@ -30,6 +37,6 @@ func (c *ShortenerController) Retrieve(ctx *fiber.Ctx) error {
 	return ctx.JSON(nil)
 }
 
-func NewShortenerController(log *customtype.Logger, registry *service.Registry) *ShortenerController {
-	return &ShortenerController{log: log, registry: registry}
+func NewShortenerController(log *customtype.Logger, svc *service.Registry) *ShortenerController {
+	return &ShortenerController{log: log, svc: svc}
 }

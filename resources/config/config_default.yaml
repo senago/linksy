@@ -5,6 +5,7 @@ service:
     address: 0.0.0.0
     port: 8080
   shutdown_timeout: 5
+  db_type: postgres # or memory
 
-db:
+postgres:
   connection_string: postgres://root:rootpassword@postgres:5432/linksy

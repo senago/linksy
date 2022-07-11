@@ -7,12 +7,12 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/spf13/viper"
 
 	"go.uber.org/zap"
 
 	"github.com/senago/linksy/internal/api"
+	"github.com/senago/linksy/internal/db"
 )
 
 const (
@@ -44,17 +44,14 @@ func main() {
 
 	// -------------------- Set up database -------------------- //
 
-	log.Println(viper.GetString("db.connection_string"))
-
-	dbPool, err := pgxpool.Connect(context.Background(), viper.GetString("db.connection_string"))
+	dbRegistry, err := db.NewRegistry(viper.GetString("service.db_type"))
 	if err != nil {
-		log.Fatalf("unable to connect to the database: %s", err)
+		log.Fatalf("failed to create new db registry: %s", err)
 	}
-	defer dbPool.Close()
 
 	// -------------------- Set up service -------------------- //
 
-	svc, err := api.NewAPIService(logger, dbPool)
+	svc, err := api.NewAPIService(logger, dbRegistry)
 	if err != nil {
 		log.Fatalf("error creating service instance: %s", err)
 	}

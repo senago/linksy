@@ -5,14 +5,18 @@ go 1.18
 require (
 	github.com/bytedance/sonic v1.3.3
 	github.com/gofiber/fiber/v2 v2.35.0
+	github.com/google/uuid v1.1.2
 	github.com/jackc/pgx/v5 v5.0.0-alpha.4
+	github.com/mr-tron/base58 v1.2.0
 	github.com/spf13/viper v1.12.0
+	github.com/stretchr/testify v1.7.1
 	go.uber.org/zap v1.21.0
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20211019084208-fb5309c8db06 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -25,6 +29,7 @@ require (
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

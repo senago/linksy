@@ -10,13 +10,8 @@ type Registry struct {
 	ShortenerController *ShortenerController
 }
 
-func NewRegistry(log *customtype.Logger, dbConn *customtype.DBConn) (*Registry, error) {
-	repository, err := db.NewRepository(dbConn)
-	if err != nil {
-		return nil, err
-	}
-
-	serviceRegistry := service.NewRegistry(log, repository)
+func NewRegistry(log *customtype.Logger, dbRegistry *db.Registry) (*Registry, error) {
+	serviceRegistry := service.NewRegistry(log, dbRegistry)
 
 	return &Registry{
 		ShortenerController: NewShortenerController(log, serviceRegistry),

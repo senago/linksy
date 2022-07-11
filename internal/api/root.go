@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/senago/linksy/internal/api/controller"
 	"github.com/senago/linksy/internal/customtype"
+	"github.com/senago/linksy/internal/db"
 )
 
 type APIService struct {
@@ -22,7 +23,7 @@ func (svc *APIService) Shutdown(ctx context.Context) error {
 	return svc.router.Shutdown()
 }
 
-func NewAPIService(log *customtype.Logger, dbConn *customtype.DBConn) (*APIService, error) {
+func NewAPIService(log *customtype.Logger, dbRegistry *db.Registry) (*APIService, error) {
 	svc := &APIService{
 		log: log,
 		router: fiber.New(fiber.Config{
@@ -31,7 +32,7 @@ func NewAPIService(log *customtype.Logger, dbConn *customtype.DBConn) (*APIServi
 		}),
 	}
 
-	registry, err := controller.NewRegistry(log, dbConn)
+	registry, err := controller.NewRegistry(log, dbRegistry)
 	if err != nil {
 		return nil, err
 	}

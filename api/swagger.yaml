@@ -11,7 +11,7 @@ paths:
     post:
       tags:
         - Shortener
-      summary: Shorten given URL to an ID
+      summary: Shorten given URL to a hash
       security: []
       requestBody:
         content:
@@ -34,10 +34,10 @@ paths:
     get:
       tags:
         - Shortener
-      summary: Get original URL by ID
+      summary: Get original URL by hash
       security: []
       parameters:
-        - $ref: "#/components/parameters/idParam"
+        - $ref: "#/components/parameters/hashParam"
       responses:
         "500":
           description: Internal error
@@ -51,9 +51,9 @@ paths:
 
 components:
   parameters:
-    idParam:
+    hashParam:
       in: query
-      name: id
+      name: hash
       required: true
       schema:
         type: string
@@ -65,7 +65,7 @@ components:
     ShortenResponse:
       type: object
       properties:
-        id:
+        hash:
           type: string
 
     RetrieveResponse:
