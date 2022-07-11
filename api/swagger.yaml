@@ -22,7 +22,6 @@ paths:
       responses:
         "500":
           description: Internal error
-          content: {}
         "200":
           description: Success
           content:
@@ -42,6 +41,10 @@ paths:
         "500":
           description: Internal error
           content: {}
+        "404":
+          description: Not found in the database
+        "409":
+          description: Link is expired
         "200":
           description: Success
           content:

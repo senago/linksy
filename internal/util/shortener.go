@@ -1,7 +1,7 @@
 package util
 
 import (
-	"crypto/sha256"
+	"crypto/md5"
 	"math/big"
 	"strconv"
 
@@ -14,7 +14,7 @@ const (
 )
 
 func sha256Of(value string) []byte {
-	hasher := sha256.New()
+	hasher := md5.New()
 	hasher.Write([]byte(value))
 	return hasher.Sum(nil)
 }

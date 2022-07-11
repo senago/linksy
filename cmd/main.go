@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/spf13/viper"
 
 	"go.uber.org/zap"
@@ -19,6 +20,9 @@ const (
 	CONFIG_PATH     = "config.yaml"
 	DEFAULT_ADDRESS = "0.0.0.0"
 	DEFAULT_PORT    = "8080"
+
+	DB_TYPE_MEMORY   = "memory"
+	DB_TYPE_POSTGRES = "postgres"
 )
 
 func main() {
@@ -44,9 +48,23 @@ func main() {
 
 	// -------------------- Set up database -------------------- //
 
-	dbRegistry, err := db.NewRegistry(viper.GetString("service.db_type"))
-	if err != nil {
-		log.Fatalf("failed to create new db registry: %s", err)
+	var dbRegistry *db.Registry
+
+	dbType := viper.GetString("service.db_type")
+	switch dbType {
+	case DB_TYPE_MEMORY:
+		dbRegistry = db.NewMemoryRegistry()
+	case DB_TYPE_POSTGRES:
+		dbPool, err := pgxpool.Connect(context.Background(), viper.GetString("postgres.connection_string"))
+		if err != nil {
+			log.Fatalf("failed to connect to the postgres database: %s", err)
+		}
+		defer dbPool.Close()
+
+		dbRegistry = db.NewPostgresRegistry(dbPool)
+	default:
+		log.Fatalf("unexpected db type: [%s]", dbType)
+
 	}
 
 	// -------------------- Set up service -------------------- //

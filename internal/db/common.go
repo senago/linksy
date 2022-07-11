@@ -7,9 +7,15 @@ import (
 	"github.com/senago/linksy/internal/constants"
 )
 
+var (
+	mapping = map[error]error{pgx.ErrNoRows: constants.ErrDBNotFound}
+)
+
 func wrapErr(err error) error {
-	if errors.Is(err, pgx.ErrNoRows) {
-		return constants.ErrDBNotFound
+	for k, v := range mapping {
+		if errors.Is(err, k) {
+			return v
+		}
 	}
 	return err
 }
