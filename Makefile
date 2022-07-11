@@ -27,3 +27,6 @@ up:
 # reinstall all packages again and again in docker
 mod:
 	go mod tidy && go mod vendor && go install ./...
+
+acceptance:
+	go test -v ./test/acceptance
