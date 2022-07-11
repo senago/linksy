@@ -1,7 +1,7 @@
 package dto
 
 type ShortenRequest struct {
-	URL string `json:"url"`
+	URL string `json:"url" validate:"required"`
 }
 
 type ShortenResponse struct {
@@ -9,7 +9,7 @@ type ShortenResponse struct {
 }
 
 type RetrieveRequest struct {
-	Hash string `query:"hash"`
+	Hash string `query:"hash" validate:"required"`
 }
 
 type RetrieveResponse struct {
