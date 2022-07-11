@@ -34,7 +34,12 @@ func (c *ShortenerController) Retrieve(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.JSON(nil)
+	response, err := c.svc.ShortenerService.Retrieve(context.Background(), request)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(response)
 }
 
 func NewShortenerController(log *customtype.Logger, svc *service.Registry) *ShortenerController {

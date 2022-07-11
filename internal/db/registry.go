@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/senago/linksy/internal/db/shortener"
 	"github.com/spf13/viper"
 )
 
@@ -15,7 +14,7 @@ const (
 )
 
 type Registry struct {
-	ShortenerRepository shortener.Repository
+	ShortenerRepository ShortenerRepository
 }
 
 func NewRegistry(dbType string) (*Registry, error) {
@@ -30,7 +29,7 @@ func NewRegistry(dbType string) (*Registry, error) {
 		}
 		// defer dbPool.Close()
 
-		repository.ShortenerRepository = shortener.NewURLPostgresRepository(dbPool)
+		repository.ShortenerRepository = NewShortenerPostgresRepository(dbPool)
 
 	default:
 		return nil, fmt.Errorf("unexpected db type: [%s]", dbType)

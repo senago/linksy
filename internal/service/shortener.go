@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/senago/linksy/internal/constants"
 	"github.com/senago/linksy/internal/customtype"
 	"github.com/senago/linksy/internal/db"
 	"github.com/senago/linksy/internal/model/core"
@@ -11,8 +12,13 @@ import (
 	"github.com/senago/linksy/internal/util"
 )
 
+const (
+	LinkExpirationTime = time.Hour * 24 * 365
+)
+
 type ShortenerService interface {
 	Shorten(ctx context.Context, request *dto.ShortenRequest) (*dto.ShortenResponse, error)
+	Retrieve(ctx context.Context, request *dto.RetrieveRequest) (*dto.RetrieveResponse, error)
 }
 
 type shortenerServiceImpl struct {
@@ -26,7 +32,7 @@ func (svc *shortenerServiceImpl) Shorten(ctx context.Context, request *dto.Short
 		Hash:       util.Shorten(request.URL),
 		Value:      request.URL,
 		CreatedAt:  timeNow,
-		ExpirestAt: timeNow.Add(time.Hour * 72),
+		ExpirestAt: timeNow.Add(LinkExpirationTime),
 	}
 
 	if err := svc.db.ShortenerRepository.CreateURL(ctx, url); err != nil {
@@ -34,6 +40,24 @@ func (svc *shortenerServiceImpl) Shorten(ctx context.Context, request *dto.Short
 	}
 
 	return &dto.ShortenResponse{Hash: url.Hash}, nil
+}
+
+func (svc *shortenerServiceImpl) Retrieve(ctx context.Context, request *dto.RetrieveRequest) (*dto.RetrieveResponse, error) {
+	url, err := svc.db.ShortenerRepository.GetURL(ctx, request.Hash)
+	if err != nil {
+		return nil, err
+	}
+
+	if url.ExpirestAt.Before(time.Now()) {
+		if err := svc.db.ShortenerRepository.DeleteURL(ctx, request.Hash); err != nil {
+			if err != constants.ErrDBNotFound {
+				return nil, err
+			}
+		}
+		return nil, constants.ErrLinkExpired
+	}
+
+	return &dto.RetrieveResponse{URL: url.Value}, nil
 }
 
 func NewShortenerService(log *customtype.Logger, db *db.Registry) ShortenerService {
