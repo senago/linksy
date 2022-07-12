@@ -11,8 +11,13 @@ Simple URL Shortener
 
 Edit `resources/config/config_default.yaml` or pass to `make` configuration file with `CONFIG_SOURCE_PATH` argument:
 
-1. `service.db_type`: `memory` | `postgres`
+- `service.db_type`: `memory` | `postgres`
 
 ### Tests
 
-Acceptance tests can be run with `make acceptance`
+[Acceptance tests](test/acceptance/shortener_test.go) can be run with `make acceptance`
+
+### [Shortening Algorithm](internal/util/shortener.go)
+
+1. Get the hash of an URL with some salt added (UUID is used), salt is used to produce different short links for the same input from potentially different users
+2. Encode the hash into base58 and return first 10 characters

@@ -21,4 +21,7 @@ func NewCodedError(msg string, code int) *CodedError {
 var (
 	ErrDBNotFound  = &CodedError{errors.New("Not found in db"), http.StatusNotFound}
 	ErrLinkExpired = &CodedError{errors.New("Link is expired"), http.StatusConflict}
+	ErrInternal    = &CodedError{errors.New("Internal server error"), http.StatusInternalServerError}
+
+	ErrDuplicateHash = errors.New("Duplicate hash value")
 )

@@ -9,7 +9,9 @@ type Registry struct {
 }
 
 func NewMemoryRegistry() *Registry {
-	return nil
+	return &Registry{
+		ShortenerRepository: NewShortenerMemoryRepository(),
+	}
 }
 
 func NewPostgresRegistry(dbConn *customtype.DBConn) *Registry {

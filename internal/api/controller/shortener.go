@@ -16,7 +16,7 @@ type ShortenerController struct {
 
 func (c *ShortenerController) Shorten(ctx *fiber.Ctx) error {
 	request := &dto.ShortenRequest{}
-	if err := Bind(ctx, request); err != nil {
+	if err := Bind(ctx, request, ctx.BodyParser); err != nil {
 		return err
 	}
 
@@ -30,7 +30,7 @@ func (c *ShortenerController) Shorten(ctx *fiber.Ctx) error {
 
 func (c *ShortenerController) Retrieve(ctx *fiber.Ctx) error {
 	request := &dto.RetrieveRequest{}
-	if err := Bind(ctx, request); err != nil {
+	if err := Bind(ctx, request, ctx.QueryParser); err != nil {
 		return err
 	}
 

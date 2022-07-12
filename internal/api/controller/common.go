@@ -10,6 +10,8 @@ import (
 	"github.com/senago/linksy/internal/constants"
 )
 
+type Parser func(out interface{}) error
+
 var validate = validator.New()
 
 func ValidateStruct(i interface{}) error {
@@ -23,13 +25,9 @@ func ValidateStruct(i interface{}) error {
 	return nil
 }
 
-func Bind(ctx *fiber.Ctx, out interface{}) error {
-	if err := ctx.BodyParser(out); err != nil {
-		return err
-	}
-
-	if err := ctx.QueryParser(out); err != nil {
-		return err
+func Bind(ctx *fiber.Ctx, out interface{}, parsers ...Parser) error {
+	for _, parser := range parsers {
+		parser(out)
 	}
 
 	if err := ValidateStruct(out); err != nil {
