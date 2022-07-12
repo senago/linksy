@@ -64,7 +64,6 @@ func main() {
 		dbRegistry = db.NewPostgresRegistry(dbPool)
 	default:
 		log.Fatalf("unexpected db type: [%s]", dbType)
-
 	}
 
 	// -------------------- Set up service -------------------- //
