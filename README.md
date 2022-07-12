@@ -9,9 +9,7 @@ Simple URL Shortener
 
 ### Configuration
 
-Edit `resources/config/config_default.yaml` or pass to `make` configuration file with `CONFIG_SOURCE_PATH` argument:
-
-- `service.db_type`: `memory` | `postgres`
+Edit [default config](resources/config/config_default.yaml) or pass to `make` configuration file with `CONFIG_SOURCE_PATH` argument
 
 ### Tests
 
